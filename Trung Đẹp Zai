@@ -1,0 +1,268 @@
+local CoreGui = game:GetService("CoreGui")
+local UserInputService = game:GetService("UserInputService")
+local Lighting = game:GetService("Lighting")
+local Workspace = game:GetService("Workspace")
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local Terrain = Workspace:FindFirstChildOfClass("Terrain")
+
+if CoreGui:FindFirstChild("ObitoFixLagRedUI") then
+    CoreGui.ObitoFixLagRedUI:Destroy()
+end
+
+pcall(function()
+    settings().Rendering.QualityLevel = Enum.QualityLevel.Level01
+    settings().Rendering.MeshPartDetailLevel = Enum.MeshPartDetailLevel.Level04
+end)
+
+local ObitoFixLagRedUI = Instance.new("ScreenGui")
+ObitoFixLagRedUI.Name = "ObitoFixLagRedUI"
+ObitoFixLagRedUI.Parent = CoreGui
+ObitoFixLagRedUI.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+local ToggleButton = Instance.new("TextButton")
+ToggleButton.Name = "ToggleButton"
+ToggleButton.Parent = ObitoFixLagRedUI
+ToggleButton.BackgroundColor3 = Color3.fromRGB(15, 0, 5)
+ToggleButton.Position = UDim2.new(0, 15, 0.4, 0)
+ToggleButton.Size = UDim2.new(0, 46, 0, 46)
+ToggleButton.Font = Enum.Font.Code
+ToggleButton.Text = "O"
+ToggleButton.TextColor3 = Color3.fromRGB(255, 30, 60)
+ToggleButton.TextSize = 24
+ToggleButton.Active = true
+
+local ToggleCorner = Instance.new("UICorner")
+ToggleCorner.CornerRadius = UDim.new(0, 10)
+ToggleCorner.Parent = ToggleButton
+
+local ToggleStroke = Instance.new("UIStroke")
+ToggleStroke.Color = Color3.fromRGB(255, 30, 60)
+ToggleStroke.Thickness = 2
+ToggleStroke.Parent = ToggleButton
+
+local MainFrame = Instance.new("Frame")
+MainFrame.Name = "MainFrame"
+MainFrame.Parent = ObitoFixLagRedUI
+MainFrame.BackgroundColor3 = Color3.fromRGB(18, 2, 6)
+MainFrame.BorderSizePixel = 0
+MainFrame.Position = UDim2.new(0.35, 0, 0.25, 0)
+MainFrame.Size = UDim2.new(0, 310, 0, 245)
+MainFrame.Active = true
+MainFrame.ClipsDescendants = true
+MainFrame.Visible = true
+
+local MainCorner = Instance.new("UICorner")
+MainCorner.CornerRadius = UDim.new(0, 10)
+MainCorner.Parent = MainFrame
+
+local MainStroke = Instance.new("UIStroke")
+MainStroke.Color = Color3.fromRGB(255, 30, 60)
+MainStroke.Thickness = 2
+MainStroke.Parent = MainFrame
+
+local MainGradient = Instance.new("UIGradient")
+MainGradient.Color = ColorSequence.new({
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(35, 5, 12)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(12, 2, 5))
+})
+MainGradient.Rotation = 45
+MainGradient.Parent = MainFrame
+
+local TitleBar = Instance.new("Frame")
+TitleBar.Name = "TitleBar"
+TitleBar.Parent = MainFrame
+TitleBar.BackgroundColor3 = Color3.fromRGB(45, 8, 15)
+TitleBar.BorderSizePixel = 0
+TitleBar.Size = UDim2.new(1, 0, 0, 38)
+
+local TitleCorner = Instance.new("UICorner")
+TitleCorner.CornerRadius = UDim.new(0, 10)
+TitleCorner.Parent = TitleBar
+
+local TitleText = Instance.new("TextLabel")
+TitleText.Parent = TitleBar
+TitleText.BackgroundTransparency = 1
+TitleText.Position = UDim2.new(0, 14, 0, 0)
+TitleText.Size = UDim2.new(1, -28, 1, 0)
+TitleText.Font = Enum.Font.Code
+TitleText.Text = "OBITO FIX LAG"
+TitleText.TextColor3 = Color3.fromRGB(255, 200, 210)
+TitleText.TextSize = 16
+TitleText.TextXAlignment = Enum.TextXAlignment.Left
+
+local TitleLine = Instance.new("Frame")
+TitleLine.Parent = TitleBar
+TitleLine.BackgroundColor3 = Color3.fromRGB(255, 30, 60)
+TitleLine.BorderSizePixel = 0
+TitleLine.Position = UDim2.new(0, 0, 1, -2)
+TitleLine.Size = UDim2.new(1, 0, 0, 2)
+
+local Container = Instance.new("Frame")
+Container.Name = "Container"
+Container.Parent = MainFrame
+Container.BackgroundTransparency = 1
+Container.Position = UDim2.new(0, 10, 0, 46)
+Container.Size = UDim2.new(1, -20, 0, 190)
+
+local UIListLayout = Instance.new("UIListLayout")
+UIListLayout.Parent = Container
+UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+UIListLayout.Padding = UDim.new(0, 8)
+
+local function createNeonButton(text, btnColor, strokeColor, callback)
+    local btn = Instance.new("TextButton")
+    btn.Parent = Container
+    btn.BackgroundColor3 = btnColor
+    btn.Size = UDim2.new(1, 0, 0, 38)
+    btn.Font = Enum.Font.Code
+    btn.Text = text
+    btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    btn.TextSize = 13
+    btn.AutoButtonColor = true
+    
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, 8)
+    corner.Parent = btn
+
+    local btnStroke = Instance.new("UIStroke")
+    btnStroke.Color = strokeColor
+    btnStroke.Thickness = 1.5
+    btnStroke.Parent = btn
+
+    local btnGradient = Instance.new("UIGradient")
+    btnGradient.Color = ColorSequence.new({
+        ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 255, 255)),
+        ColorSequenceKeypoint.new(1, Color3.fromRGB(150, 150, 150))
+    })
+    btnGradient.Rotation = 90
+    btnGradient.Parent = btn
+    
+    btn.MouseButton1Click:Connect(callback)
+    return btn
+end
+
+ToggleButton.MouseButton1Click:Connect(function()
+    MainFrame.Visible = not MainFrame.Visible
+end)
+
+local function isImportant(obj)
+    if obj:FindFirstAncestorOfClass("Model") and obj:FindFirstAncestorOfClass("Model"):FindFirstChildOfClass("Humanoid") then
+        return true
+    end
+    local name = string.lower(obj.Name)
+    if name:find("egg") or name:find("trung") or name:find("plot") or 
+       name:find("base") or name:find("claim") or name:find("pen") or name:find("nest") then
+        return true
+    end
+    return false
+end
+
+createNeonButton("🔥 Fix Lag Vô Cực ☠️ (Xóa Map)", Color3.fromRGB(180, 20, 40), Color3.fromRGB(255, 60, 80), function()
+    Lighting.GlobalShadows = false
+    Lighting.FogEnd = 9e9
+    Lighting.Brightness = 0
+    Lighting.OutdoorAmbient = Color3.fromRGB(128, 128, 128)
+    
+    for _, v in ipairs(Lighting:GetChildren()) do
+        if v:IsA("PostEffect") or v:IsA("DepthOfFieldEffect") or 
+           v:IsA("BlurEffect") or v:IsA("SunRaysEffect") or 
+           v:IsA("BloomEffect") or v:IsA("ColorCorrectionEffect") or 
+           v:IsA("Atmosphere") or v:IsA("Sky") then
+            v:Destroy()
+        end
+    end
+
+    if Terrain then Terrain:Clear() end
+
+    for _, v in ipairs(Workspace:GetDescendants()) do
+        if v:IsA("Decal") or v:IsA("Texture") or v:IsA("ParticleEmitter") or v:IsA("Trail") or v:IsA("Beam") then
+            v:Destroy()
+        elseif v:IsA("BasePart") then
+            v.Material = Enum.Material.SmoothPlastic
+            v.Reflectance = 0
+            v.CastShadow = false
+            
+            if not isImportant(v) then
+                v.Transparency = 1
+                local name = string.lower(v.Name)
+                if name:find("fence") or name:find("wall") or name:find("shop") or name:find("decor") or name:find("tree") then
+                    v.CanCollide = false
+                end
+            else
+                v.Transparency = 0
+                v.Color = Color3.fromRGB(150, 150, 150)
+            end
+        end
+    end
+end)
+
+createNeonButton("👤 Fix Lag Player (Tối Ưu Người Chơi)", Color3.fromRGB(120, 20, 30), Color3.fromRGB(220, 50, 70), function()
+    local function optimizeCharacter(char)
+        if not char or char == LocalPlayer.Character then return end
+        
+        for _, v in ipairs(char:GetDescendants()) do
+            if v:IsA("Accessory") or v:IsA("Shirt") or v:IsA("Pants") or v:IsA("ShirtGraphic") or v:IsA("BodyColors") then
+                v:Destroy()
+            elseif v:IsA("ParticleEmitter") or v:IsA("Trail") or v:IsA("Sparkles") or v:IsA("Fire") then
+                v:Destroy()
+            elseif v:IsA("BasePart") then
+                v.Material = Enum.Material.SmoothPlastic
+                v.CastShadow = false
+            end
+        end
+    end
+
+    for _, player in ipairs(Players:GetPlayers()) do
+        if player ~= LocalPlayer and player.Character then
+            optimizeCharacter(player.Character)
+        end
+    end
+end)
+
+createNeonButton("🥚 Hiện Rõ Chuồng & Trứng", Color3.fromRGB(90, 20, 30), Color3.fromRGB(180, 40, 60), function()
+    for _, v in ipairs(Workspace:GetDescendants()) do
+        if v:IsA("BasePart") and isImportant(v) then
+            v.Transparency = 0
+            v.Material = Enum.Material.SmoothPlastic
+        end
+    end
+end)
+
+createNeonButton("🔄 Khôi Phục Hiển Thị Map", Color3.fromRGB(40, 10, 18), Color3.fromRGB(110, 30, 45), function()
+    for _, v in ipairs(Workspace:GetDescendants()) do
+        if v:IsA("BasePart") then
+            v.Transparency = 0
+            v.CanCollide = true
+        end
+    end
+end)
+
+local function makeDraggable(guiObject, handleObject)
+    local dragging, dragStart, startPos
+    handleObject = handleObject or guiObject
+
+    handleObject.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            dragging = true
+            dragStart = input.Position
+            startPos = guiObject.Position
+        end
+    end)
+
+    handleObject.InputEnded:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            dragging = false
+        end
+    end)
+
+    UserInputService.InputChanged:Connect(function(input)
+        if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+            local delta = input.Position - dragStart
+            guiObject.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+        end
+    end)
+end
+
+makeDraggable(MainFrame, TitleBar)
+makeDraggable(ToggleButton, ToggleButton)
